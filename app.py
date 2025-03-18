@@ -97,11 +97,16 @@ st.markdown(
         unsafe_allow_html=True,
     )
 
-file = st.file_uploader(label="", type=['csv', 'xlsx'], key="custom_file_uploader")
-if file.name.endswith('csv'):
-    data = pd.read_csv(file)
+data = st.file_uploader(label="", type=['csv', 'xlsx'], key="custom_file_uploader")
+if data is not None:
+    if data.name.endswith('csv'):
+        # Process file
+        df = pd.read_csv(data)
+    else:
+        st.error("Please upload a valid CSV file.")
 else:
-    data = pd.read_excel(file)
+    st.warning("No file uploaded yet.")
+
     st.success("✅ File successfully uploaded!")
     st.dataframe(data, use_container_width=True)
     st.write(f'Total Rows: {data.shape[0]}')
